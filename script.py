@@ -26,7 +26,7 @@ def changeNameToHTML(mov_name):
 
 def createuserList():
     new_list = []
-    file = open('.venv/users.txt', 'r')
+    file = open('users.txt', 'r')
     for line in file:
         new_list.append(line.strip())
     return new_list
