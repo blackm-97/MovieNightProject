@@ -46,27 +46,31 @@ if __name__ == '__main__':
     print('Enter the movie title:')
     movie_name = input()
     movie_name = changeNameToHTML(movie_name)
-    print(movie_name)
 
-    for user in user_list:
-        url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name +"/"
+    # Tests that movie exists
+    movie_test_doc = getHTMLdocument("https://letterboxd.com/film/" + movie_name +"/")
+    soup = BeautifulSoup(movie_test_doc, 'html.parser')
+    review = soup.find(attrs={"name": "description"})
 
-        # create document
-        html_document = getHTMLdocument(url_to_scrape)
+    #If movie exists, continue
+    if review:
+        for user in user_list:
+            url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name + "/"
 
-        # create soap object
-        soup = BeautifulSoup(html_document, 'html.parser')
+            # create document
+            html_document = getHTMLdocument(url_to_scrape)
 
-        try:
-            review = soup.find(attrs={"name": "description"})
-            rating = soup.find(attrs={"name": "twitter:data2"})
-            rating = getRating(str(rating.get('content')))
-            print(review.get('content'))
-            print(rating)
-        except:
-            print('An error occurred! The username was not found.')
-        # print(soup.find('div', 'film-metadata'))
+            # create soap object
+            soup = BeautifulSoup(html_document, 'html.parser')
 
-        # find all the anchor tags with "href"
-        # attribute starting with "https://"
-        # print(soup.prettify())
+            try:
+                review = soup.find(attrs={"name": "description"})
+                rating = soup.find(attrs={"name": "twitter:data2"})
+                rating = getRating(str(rating.get('content')))
+                print(review.get('content'))
+                print(rating)
+            except:
+                print('User did not enter any rating')
+            # print(soup.find('div', 'film-metadata'))
+    else:
+        print('No Movie Found')
