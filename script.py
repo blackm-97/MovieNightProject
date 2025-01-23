@@ -72,13 +72,13 @@ if __name__ == '__main__':
             print(name)
             print("Genres: " + str(genre_list))
             print("Runtime: " + runtime)
-            film_stats += "Film Stats: " + name[:-7] + ', ' + year
+            film_stats += name[:-7] + ', ' + year
             if genre_list[0]:
                 film_stats += ", " + genre_list[0]
-            if genre_list[1]:
+            if len(genre_list) > 1 and genre_list[1]:
                 film_stats += ", " + genre_list[1]
             # print(year)
-            film_stats += ", " + runtime
+            film_stats += ", " + runtime.split()[0]
             print()
             flag = True
         except:
@@ -87,6 +87,7 @@ if __name__ == '__main__':
 
         total_score = 0.0
         total_reviews = 0.0
+        score_list = []
 
         # If movie exists, continue
         if flag:
@@ -103,22 +104,27 @@ if __name__ == '__main__':
                     review = soup.find(attrs={"name": "description"})
                     rating = soup.find(attrs={"name": "twitter:data2"})
                     rating = getRating(str(rating.get('content')))
-                    # print(review.get('content'))
                     print('User: ' + user)
                     print('Rating: ' + str(rating))
+                    print(review.get('content'))
                     print()
                     total_reviews += 1
                     total_score += float(rating)
+                    score_list.append(rating)
                 except:
                     print('User: ' + user)
                     print('User did not enter any rating')
                     print()
+                    score_list.append(None)
                 # print(soup.find('div', 'film-metadata'))
             if total_reviews != 0:
                 print("Total Score:")
                 print(total_score / total_reviews)
                 print()
                 film_stats += ", " + str(total_score / total_reviews)
+                print("Film Stats:")
                 print(film_stats)
+                print("Scores List:")
+                print(score_list)
             else:
                 print('No reviews found')
