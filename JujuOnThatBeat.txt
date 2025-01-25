@@ -1,0 +1,1 @@
+python -m PyInstaller -c -F --hidden-import BeautifulSoup --hidden-import requests script.py

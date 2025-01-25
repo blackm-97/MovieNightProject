@@ -25,10 +25,11 @@ def changeNameToHTML(mov_name):
     return mov_name
 
 def createuserList():
-    new_list = []
-    file = open('users.txt', 'r')
-    for line in file:
-        new_list.append(line.strip())
+    new_list = ['treemang', 'corbennrdm', 'ratgaming', 'yerboibilliam', 'ts4elitegamer',
+                'thatmemecrona', 'cheesefrogs', 'fakegam3r', 'toasterandy', 'bigsnackary']
+    # file = open('users.txt', 'r')
+    # for line in file:
+    #     new_list.append(line.strip())
     return new_list
 
 # assign required credentials
