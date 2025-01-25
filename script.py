@@ -73,7 +73,7 @@ if __name__ == '__main__':
             print("Genres: " + str(genre_list))
             print("Runtime: " + runtime)
             film_stats += name[:-7] + ', ' + year
-            if genre_list[0]:
+            if len(genre_list) > 0 and genre_list[0]:
                 film_stats += ", " + genre_list[0]
             if len(genre_list) > 1 and genre_list[1]:
                 film_stats += ", " + genre_list[1]
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         # If movie exists, continue
         if flag:
             for user in user_list:
-                url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name + "/"
+                url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name + "/reviews/"
 
                 # create document
                 html_document = getHTMLdocument(url_to_scrape)
@@ -100,7 +100,31 @@ if __name__ == '__main__':
                 # create soap object
                 soup = BeautifulSoup(html_document, 'html.parser')
 
+
+
                 try:
+                    film_details = soup.find(attrs={"class": "viewings-list"})
+                    count = str(film_details).count('<li class="film-detail">')
+
+                    if count == 1:
+                        url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name + "/"
+
+                        # create document
+                        html_document = getHTMLdocument(url_to_scrape)
+
+                        # create soap object
+                        soup = BeautifulSoup(html_document, 'html.parser')
+                    elif count > 1:
+                        url_to_scrape = "https://letterboxd.com/" + user + "/film/" + movie_name + "/" + str(count - 1) + "/"
+
+                        # create document
+                        html_document = getHTMLdocument(url_to_scrape)
+
+                        # create soap object
+                        soup = BeautifulSoup(html_document, 'html.parser')
+                    else:
+                        raise Exception("Failed to find review")
+
                     review = soup.find(attrs={"name": "description"})
                     rating = soup.find(attrs={"name": "twitter:data2"})
                     rating = getRating(str(rating.get('content')))
